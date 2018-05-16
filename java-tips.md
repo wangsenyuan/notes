@@ -1,0 +1,54 @@
+1. LinkedHashMap
+  1. LinkedHashMap，使用一个双向列表将Entries连接起来，提供可预期的迭代顺序；默认顺序是插入顺序；
+  2. 以下构造函数的accessOrder为true时，Entries将会按照accessOrder连接起来，从Least Recent Access到Most Recent Acess; 所以，用于实现LRU cache;
+
+  ```
+  LinkedHashMap(int initialCapacity, float loadFactor, boolean accessOrder)
+
+  ```
+
+  ```
+
+  A special constructor is provided to create a linked hash map whose order of iteration is the order in which its entries were last accessed, from least-recently accessed to most-recently (access-order). This kind of map is well-suited to building LRU caches. Invoking the put, putIfAbsent, get, getOrDefault, compute, computeIfAbsent, computeIfPresent, or merge methods results in an access to the corresponding entry (assuming it exists after the invocation completes). The replace methods only result in an access of the entry if the value is replaced. The putAll method generates one entry access for each mapping in the specified map, in the order that key-value mappings are provided by the specified map's entry set iterator. No other methods generate entry accesses. In particular, operations on collection-views do not affect the order of iteration of the backing map.
+
+  The removeEldestEntry(Map.Entry) method may be overridden to impose a policy for removing stale mappings automatically when new mappings are added to the map.
+
+  ```
+
+   3. Iteration over the collection-views of a LinkedHashMap requires time proportional to the size of the map, regardless of its capacity. Iteration over a HashMap is likely to be more expensive, requiring time proportional to its capacity.
+
+2. HashMap
+  1. 解决Hash Collision的方法是用链表，即将相同Hash的放在一个bucket里，通过链表连接；
+  2. 当数据足够多的时候，超过了loadFactor（默认是0.75)时，会处罚resize, 原始大小的2倍, 原有的entry会重新插入新的table;
+
+3. ConcurrentHashMap
+  1. 不允许null做为Key和Value
+  2. get时，不加锁; put时，新值将加在链表的末端, 在链表的头节点加锁（如果已存在);
+  3. 通过key的hash获取，在table中定位，通过access volatile的方式，使得一个线程对该entry的变化，可以最快被其他线程看到；
+
+  ```Java
+    @SuppressWarnings("unchecked")
+    static final <K,V> Node<K,V> tabAt(Node<K,V>[] tab, int i) {
+        return (Node<K,V>)U.getObjectVolatile(tab, ((long)i << ASHIFT) + ABASE);
+    }
+
+    static final <K,V> boolean casTabAt(Node<K,V>[] tab, int i,
+                                        Node<K,V> c, Node<K,V> v) {
+        return U.compareAndSwapObject(tab, ((long)i << ASHIFT) + ABASE, c, v);
+    }
+
+    static final <K,V> void setTabAt(Node<K,V>[] tab, int i, Node<K,V> v) {
+        U.putObjectVolatile(tab, ((long)i << ASHIFT) + ABASE, v);
+    }
+
+  ```
+
+  当size为2的整数倍时，计算bucket的下标，可以用下面的位运算快速进行:
+
+  ```Java
+
+  (n - 1) & h
+
+  ```
+
+  
