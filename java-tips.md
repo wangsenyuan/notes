@@ -23,7 +23,20 @@
 
 3. ConcurrentHashMap
   1. 不允许null做为Key和Value
-  2. get时，不加锁; put时，新值将加在链表的末端, 在链表的头节点加锁（如果已存在);
+    如下为containsKey的实现, 如果和containsKey实现一样， 判断是否能找到保存key的Node, 那么就需要加锁；使用判断value是否为空，可以不加锁；这个应该是value不能为空的原因；
+
+    ```Java
+    public boolean containsKey(Object key) {
+        return get(key) != null;
+    }
+    ```
+    ```Java
+    public boolean containsKey(Object key) {
+        return getNode(hash(key), key) != null;
+    }
+
+    ```
+  2. get时，不加锁; put时，新值将加在链表的末端, 在链表的头节点加锁（如果存在);
   3. 通过key的hash获取，在table中定位，通过access volatile的方式，使得一个线程对该entry的变化，可以最快被其他线程看到；
 
   ```Java
@@ -51,4 +64,49 @@
 
   ```
 
+4. AtomicReference
+  1. AtomicReference可用于在两个线程间无锁交换数据
+  ```Java
+
+
+    public static void main(String[] args) throws InterruptedException {
+        AtomicReference<Integer> ref = new AtomicReference<>();
+        Integer val = new Integer(0);
+        ref.set(val);
+
+        Consumer consumer = new Consumer(ref);
+
+        new Thread(consumer).start();
+
+        Thread.sleep(2000);
+
+        ref.compareAndSet(val, new Integer(10));
+        Thread.sleep(100);
+    }
+
+
+    static class Consumer implements Runnable {
+        private final AtomicReference<Integer> ref;
+        private int last;
+
+        Consumer(AtomicReference<Integer> ref) {
+            this.ref = ref;
+        }
+
+        @Override
+        public void run() {
+            int prev = last;
+            while ((last = ref.get()) == prev) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("read " + last + "from ref");
+            }
+            System.out.println("value updated to " + last);
+        }
+    }
+
+  ```
   
