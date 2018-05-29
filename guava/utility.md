@@ -29,7 +29,9 @@
 
   比较结果不为0之前， 将一直处于ACTIVE状态；一旦到达LESS或GREATER状态，结果将不再改变:
 
-  ```
+
+  ```Java
+
   ComparisonChain classify(int result) {
           return (result < 0) ? LESS : (result > 0) ? GREATER : ACTIVE;
   }
