@@ -11,3 +11,43 @@
   * 3.2\. 使用keys数组保存key， 不用hash索引，而是使用ordinal()作为key的索引；在构造EnumMap的时候，必须提供key的类型；keys将会被enum的值预先填充好
   * 3.3\. value存在一个vals数组中，和keys使用相同的下标；
   * 3.4\. put/remove不会改变keys，而只会将vals对应的值改变；value不能为空；
+* 4\. Utility
+  * 4.1\. 如何实现一个loop，直到元素被全部删除的，iterator
+  
+  ```Java
+
+  return new Iterator<T>() {
+      Iterator<T> iterator = emptyModifiableIterator();
+
+      @Override
+      public boolean hasNext() {
+        /*
+         * Don't store a new Iterator until we know the user can't remove() the last returned
+         * element anymore. Otherwise, when we remove from the old iterator, we may be invalidating
+         * the new one. The result is a ConcurrentModificationException or other bad behavior.
+         *
+         * (If we decide that we really, really hate allocating two Iterators per cycle instead of
+         * one, we can optimistically store the new Iterator and then be willing to throw it out if
+         * the user calls remove().)
+         */
+        return iterator.hasNext() || iterable.iterator().hasNext();
+      }
+
+      @Override
+      public T next() {
+        if (!iterator.hasNext()) {
+          iterator = iterable.iterator();
+          if (!iterator.hasNext()) {
+            throw new NoSuchElementException();
+          }
+        }
+        return iterator.next();
+      }
+
+      @Override
+      public void remove() {
+        iterator.remove();
+      }
+    };
+
+  ```
