@@ -1,29 +1,28 @@
 * 1\. redis memeory usage
   * 1.1\. 可以通过 info memory 查看内存使用情况
   ```
-used_memory:2939472
-used_memory_human:2.80M
-used_memory_rss:733184
-used_memory_rss_human:716.00K
-used_memory_peak:3005424
-used_memory_peak_human:2.87M
-used_memory_peak_perc:97.81%
-used_memory_overhead:1145970
-used_memory_startup:980752
-used_memory_dataset:1793502
-used_memory_dataset_perc:91.57%
-total_system_memory:8589934592
-total_system_memory_human:8.00G
-used_memory_lua:37888
-used_memory_lua_human:37.00K
-maxmemory:0
-maxmemory_human:0B
-maxmemory_policy:noeviction
-mem_fragmentation_ratio:0.25
-mem_allocator:libc
-active_defrag_running:0
-lazyfree_pending_objects:0
-
+    used_memory:2939472
+    used_memory_human:2.80M
+    used_memory_rss:733184
+    used_memory_rss_human:716.00K
+    used_memory_peak:3005424
+    used_memory_peak_human:2.87M
+    used_memory_peak_perc:97.81%
+    used_memory_overhead:1145970
+    used_memory_startup:980752
+    used_memory_dataset:1793502
+    used_memory_dataset_perc:91.57%
+    total_system_memory:8589934592
+    total_system_memory_human:8.00G
+    used_memory_lua:37888
+    used_memory_lua_human:37.00K
+    maxmemory:0
+    maxmemory_human:0B
+    maxmemory_policy:noeviction
+    mem_fragmentation_ratio:0.25
+    mem_allocator:libc
+    active_defrag_running:0
+    lazyfree_pending_objects:0
   ```
 
   * 1.2\. used_memory redis内存分配器分配的内存总量，包括swap空间；
@@ -59,7 +58,7 @@ lazyfree_pending_objects:0
   * 3.5\.
     WATCH is used to provide a check-and-set (CAS) behavior to Redis transactions.
     WATCHed keys are monitored in order to detect changes against them. If at least one watched key is modified before the EXEC command, the whole transaction aborts, and EXEC returns a Null reply to notify that the transaction failed.
-    ```Redis
+    ```
 
     WATCH mykey
     val = GET mykey
@@ -67,7 +66,6 @@ lazyfree_pending_objects:0
     MULTI
     SET mykey $val
     EXEC
-
     ```
 
 
