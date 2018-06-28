@@ -19,7 +19,7 @@
 
 2. HashMap
   1. 解决Hash Collision的方法是用链表，即将相同Hash的放在一个bucket里，通过链表连接；
-  2. 当数据足够多的时候，超过了loadFactor（默认是0.75)时，会处罚resize, 原始大小的2倍, 原有的entry会重新插入新的table;
+  2. 当数据足够多的时候，超过了loadFactor（默认是0.75)时，会resize, 原始大小的2倍, 原有的entry会重新插入新的table;
 
 3. ConcurrentHashMap
   1. 不允许null做为Key和Value
