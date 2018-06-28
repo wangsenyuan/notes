@@ -1,6 +1,6 @@
-1. LinkedHashMap
-  1. LinkedHashMap，使用一个双向列表将Entries连接起来，提供可预期的迭代顺序；默认顺序是插入顺序；
-  2. 以下构造函数的accessOrder为true时，Entries将会按照accessOrder连接起来，从Least Recent Access到Most Recent Acess; 所以，用于实现LRU cache;
+* 1\. LinkedHashMap
+  * 1. LinkedHashMap，使用一个双向列表将Entries连接起来，提供可预期的迭代顺序；默认顺序是插入顺序；
+  * 2. 以下构造函数的accessOrder为true时，Entries将会按照accessOrder连接起来，从Least Recent Access到Most Recent Acess; 所以，用于实现LRU cache;
 
   ```
   LinkedHashMap(int initialCapacity, float loadFactor, boolean accessOrder)
@@ -15,14 +15,14 @@
 
   ```
 
-   3. Iteration over the collection-views of a LinkedHashMap requires time proportional to the size of the map, regardless of its capacity. Iteration over a HashMap is likely to be more expensive, requiring time proportional to its capacity.
+   * 3. Iteration over the collection-views of a LinkedHashMap requires time proportional to the size of the map, regardless of its capacity. Iteration over a HashMap is likely to be more expensive, requiring time proportional to its capacity.
 
-2. HashMap
-  1. 解决Hash Collision的方法是用链表，即将相同Hash的放在一个bucket里，通过链表连接；
-  2. 当数据足够多的时候，超过了loadFactor（默认是0.75)时，会resize, 原始大小的2倍, 原有的entry会重新插入新的table;
+* 2. HashMap
+  * 1. 解决Hash Collision的方法是用链表，即将相同Hash的放在一个bucket里，通过链表连接；
+  * 2. 当数据足够多的时候，超过了loadFactor（默认是0.75)时，会resize, 原始大小的2倍, 原有的entry会重新插入新的table;
 
-3. ConcurrentHashMap
-  1. 不允许null做为Key和Value
+* 3. ConcurrentHashMap
+  * 1. 不允许null做为Key和Value
     如下为containsKey的实现, 如果和containsKey实现一样， 判断是否能找到保存key的Node, 那么就需要加锁；使用判断value是否为空，可以不加锁；这个应该是value不能为空的原因；
 
     ```Java
@@ -36,8 +36,8 @@
     }
 
     ```
-  2. get时，不加锁; put时，新值将加在链表的末端, 在链表的头节点加锁（如果存在);
-  3. 通过key的hash获取，在table中定位，通过access volatile的方式，使得一个线程对该entry的变化，可以最快被其他线程看到；
+  * 2. get时，不加锁; put时，新值将加在链表的末端, 在链表的头节点加锁（如果存在);
+  * 3. 通过key的hash获取，在table中定位，通过access volatile的方式，使得一个线程对该entry的变化，可以最快被其他线程看到；
 
   ```Java
     @SuppressWarnings("unchecked")
@@ -64,8 +64,8 @@
 
   ```
 
-4. AtomicReference
-  1. AtomicReference可用于在两个线程间无锁交换数据
+* 4. AtomicReference
+  * 1. AtomicReference可用于在两个线程间无锁交换数据
   ```Java
 
 
@@ -110,3 +110,4 @@
 
   ```
   
+* 5. Vector和ArrayList的实现大体是类似的，内部都是一个数组，当capacity不足时，增大数组；主要的区别时Vector的操作上面加了sychronized锁，是线程安全的。
