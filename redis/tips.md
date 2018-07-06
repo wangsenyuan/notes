@@ -68,6 +68,16 @@
     EXEC
     ```
 
+* 4\. redis replicates data to slave (from master) async, normally, it responds to the client and replicates to the slave at the same time. WAIT command could be used to inform redis to wait for the response of replication from slave. 
+```
+> SET foo bar
+OK
+> WAIT 1 0
+(integer) 1
+> WAIT 2 1000
+(integer) 1
 
+```
+wait (number of slaves responds) (timeout), The command returns the number of slaves reached by all the writes performed in the context of the current connection.
 
   

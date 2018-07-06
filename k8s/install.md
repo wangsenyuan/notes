@@ -67,12 +67,21 @@ EOF
   setenforce 0
   ```
   * 3.5
+  for kubenertes < v1.11.0
   ```
-  cat > /etc/systemd/system/kubelet.service.d/20-pod-infra-image.conf <<EOF
-  [Service]
-   Environment="KUBELET_EXTRA_ARGS=--pod-infra-container-image=registry.cn-hangzhou.aliyuncs.com/maycur-k8s/pause-amd64:3.1"
-   EOF
+cat > /etc/systemd/system/kubelet.service.d/20-pod-infra-image.conf <<EOF
+[Service]
+Environment="KUBELET_EXTRA_ARGS=--pod-infra-container-image=registry.cn-hangzhou.aliyuncs.com/maycur-k8s/pause-amd64:3.1"
+EOF
   ```
+
+  for kubenetes v1.11.0
+  ```
+cat > /etc/sysconfig/kubelet <<EOF
+KUBELET_EXTRA_ARGS=--pod-infra-container-image=registry.cn-hangzhou.aliyuncs.com/maycur-k8s/pause-amd64:3.1
+EOF
+  ```
+
   * 3.6
   ```
   systemctl enable kubelet && sudo systemctl start kubelet
@@ -158,4 +167,70 @@ WantedBy=multi-user.target
   * 4.5 verify
 ```
   etcdctl member list
+```
+
+* 5 init kubernetes master node
+  * 5.1 config.yaml
+```
+apiVersion: kubeadm.k8s.io/v1alpha1
+kind: MasterConfiguration
+api:
+  advertiseAddress: 192.168.5.71
+  bindPort: 6443
+etcd:
+  endpoints: #这里填之前安装的etcd集群地址列表，修改IP地址
+  - http://192.168.5.12:2379
+  - http://192.168.5.13:2379
+  - http://192.168.4.240:2379
+networking:
+  dnsDomain: cluster.local
+  podSubnet: 10.244.0.0/16
+kubernetesVersion: 1.11.0
+imageRepository: registry.cn-hangzhou.aliyuncs.com/maycur-k8s
+featureGates:
+  CoreDNS: false
+
+```
+  * 5.2 init cluster
+```
+kubeadm init --config config.yaml
+```
+
+* 6 add worker nodes
+```
+cat > /etc/sysconfig/kubelet <<EOF
+KUBELET_EXTRA_ARGS=--pod-infra-container-image=registry.cn-hangzhou.aliyuncs.com/maycur-k8s/pause-amd64:3.1 --cadvisor-port=0 --read-only-port=0
+EOF
+modprobe -- ip_vs_sh
+modprobe -- ip_vs_rr
+modprobe -- ip_vs_wrr
+kubeadm join 192.168.5.71:6443 --token lcqygi.2ffcod4isf6bp1pn --discovery-token-ca-cert-hash sha256:996cdb70d00e28c0cbcc433d84d749a56f94c1dbe71a01ca526ab9fd1743e3ca
+```
+
+* 7 in case need to remove a node
+```
+kubeadm reset
+systemctl stop kubelet
+rm -rf /var/lib/cni/
+rm -rf /var/lib/kubelet/
+rm -rf /etc/cni/
+rm -rf /var/lib/cni/flannel/*
+rm -rf /var/lib/cni/networks/cbr0/*
+ifconfig cni0 down
+ifconfig flannel.1 down
+ifconfig docker0 down
+ip link delete cni0
+ip link delete flannel.1
+```
+then on master
+```
+kubectl delete node xxx
+```
+
+* 8 in case to create new token for node to join in
+```
+kubeadm token create
+```
+```
+openssl x509 -pubkey -in /etc/kubernetes/pki/ca.crt | openssl rsa -pubin -outform der 2>/dev/null | openssl dgst -sha256 -hex | sed 's/^.* //'
 ```

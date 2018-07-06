@@ -2,4 +2,5 @@
 ```
   set nu
   set nonu
+  set nu!
 ```
