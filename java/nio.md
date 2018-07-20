@@ -116,7 +116,7 @@ buf.clear();
 buf.put(newData.getBytes());
 
 buf.flip();
-
+™¬ˆ
 while(buf.hasRemaining()) {
     sinkChannel.write(buf);
 }

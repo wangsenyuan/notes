@@ -15,7 +15,7 @@
 * 2. docker
   * 2.1 install docker
   ```
-    yum upgrade
+    yum upgrade -y
     yum install -y docker
   ```
   * 2.2 config docker
@@ -46,17 +46,18 @@ EOF
   ```
   * 3.2 config yum to use aliyun repository
   ```
-  vi /etc/yum.repos.d/kubernetes.repo
-  [kubernetes]
-   name=Kubernetes
-   baseurl=http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
-   enabled=1
-   gpgcheck=0
-   [kubernetes]
-   name=Kubernetes
-   baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
-   enabled=1
-   gpgcheck=0
+  cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
+enabled=1
+gpgcheck=0
+[kubernetes]
+name=Kubernetes
+baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
+enabled=1
+gpgcheck=0
+EOF
   ```
   * 3.3 install
   ```
@@ -79,6 +80,12 @@ EOF
   ```
 cat > /etc/sysconfig/kubelet <<EOF
 KUBELET_EXTRA_ARGS=--pod-infra-container-image=registry.cn-hangzhou.aliyuncs.com/maycur-k8s/pause-amd64:3.1
+EOF
+  ```
+  for aliyun VPC
+  ```
+cat > /etc/sysconfig/kubelet <<EOF
+KUBELET_EXTRA_ARGS=--pod-infra-container-image=registry-vpc.cn-hangzhou.aliyuncs.com/maycur-k8s/pause-amd64:3.1
 EOF
   ```
 
