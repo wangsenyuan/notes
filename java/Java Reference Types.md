@@ -22,7 +22,7 @@ Java有四种引用类型
   ```
 
 4. PhantomReference
-   PhantomReference创建后，就无法通过get()获得referent；使用它的一个作用是和ReferenceQueue一起使用，以在对象在被GC时，获得通知
+   PhantomReference创建后，就无法通过get()获得referent；使用它的一个作用是和ReferenceQueue一起使用，以在对象在被GC时，获得通知. 假设在一个图片应用中，当切换图片的时候，要保证上一个图片资源已经被完全释放掉以后，再加载下一块图片，以避免内存泄漏，可以通过为上一个图片构建一个虚引用，关联一个ReferenceQueue，当ReferenceQueue中得到该引用的时候，再去夹在下一个图片；
 
 5. ReferenceQueue
    在构建Soft,Weak和PhantomReference的时候可以传入一个ReferenceQueue, 当对象要被GC时，引用会被放入Queue，从而可以做一些操作;
