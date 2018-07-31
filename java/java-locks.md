@@ -68,3 +68,17 @@ Conditions (also known as condition queues or condition variables) provide a mea
     A counting semaphore. Conceptually, a semaphore maintains a set of permits. Each acquire() blocks if necessary until a permit is available, and then takes it. Each release() adds a permit, potentially releasing a blocking acquirer. However, no actual permit objects are used; the Semaphore just keeps a count of the number available and acts accordingly.
 
 ```
+
+6. Advantages of java Lock interfaces with synchronized blocks?
+  1. The most important one is Lock provides a way to differ Read from Write; 
+7. The differences between wait() and sleep()?
+  1. wait() will release the lock or monitor, it should be placed in a synchonized blocks; and it will be waken by notify() or notifyAll() (in the same instance);
+  2. sleep() doesn't deal with lock or monitor, it pauses the current execution;
+  3. wait() is used for inter-thread communications;
+8. what is race condition? how to avoid it?
+  1. race condition happenes when multiple (threading) execution operate on the same object at the same time, without proper protection. A simple example is the counter example, using count++; Because ++ is not atomic, and no synchronzation, the result would not be stable nor correct. 
+  2. It needs some protection to avoid it, sychronization ensures only one execution update it at the very same moment, volatile ensures the change is visible by others ASAP. also could use atomic variables, CAS methods;
+9. How to awaken a blocked thread in Java?
+  1.  if the thread is waiting for IO result, no way to awake or interrupt it, besides resuming by the system.
+  2.  if the thread is wait(), notify() will give it control back. interrupt() the thread will also work, the execution will get a InterruptedException. 
+  3.  sleep() thread could also be interrupted.
