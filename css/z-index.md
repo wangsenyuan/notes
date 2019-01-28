@@ -1,0 +1,1 @@
+Although z-index is not a difficult property to understand, due to false assumptions it can cause confusion for beginning developers. This confusion occurs because z-index will only work on an element whose position property has been explicitly set to absolute , fixed , or relative .

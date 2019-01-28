@@ -39,6 +39,7 @@
 * 3 kubernetes
   * 3.1
   ```
+  
   cat <<EOF >  /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
@@ -46,6 +47,7 @@ EOF
   ```
   * 3.2 config yum to use aliyun repository
   ```
+
   cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
@@ -58,13 +60,19 @@ baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64/
 enabled=1
 gpgcheck=0
 EOF
+
   ```
+  
   * 3.3 install
   ```
+
   yum install -y kubelet kubectl kubeadm
+
   ``` 
+  
   * 3.4
   ```
+
   setenforce 0
   ```
   * 3.5
