@@ -1,10 +1,10 @@
 1. 公平锁和非公平锁
-   公平锁是指按照申请锁的顺序来获取锁；非公平锁即不保证先申请先获得，优点是可以提供吞吐量；
+   公平锁是指按照申请锁的顺序来获取锁；非公平锁即不保证先申请先获得，优点是可以提高吞吐量；
    ReentrantLock默认是非公平的，可以通过构造函数传入true，使其公平；
    syncrhonized是非公平锁
 2. 互斥锁和读写锁
    互斥锁也是独享锁，指一旦锁被获取以后，其他线程必须等待。
-   读写锁，一般读写，写写互斥，读读不互斥。在读比较多的情况下， 提供并发效率
+   读写锁，一般读写，写写互斥，读读不互斥。在读比较多的情况下， 提高并发效率
    ReentrantLock是互斥锁，ReadWriteLock是读写锁；
 3. ReentrantLock也可以通过Condition实现临时的共享锁；如下的代码所示：当items满的时候，put将会await; 直到其他的线程notify；这里的关键是在condition上面调用await, 该线程将会释放锁。以使其他的线程可以获得锁，进入critical section;
 
@@ -52,7 +52,7 @@ class BoundedBuffer {
 
 ```
 
-Conditions (also known as condition queues or condition variables) provide a means for one thread to suspend execution (to "wait") until notified by another thread that some state condition may now be true. Because access to this shared state information occurs in different threads, it must be protected, so a lock of some form is associated with the condition. The key property that waiting for a condition provides is that it atomically releases the associated lock and suspends the current thread, just like Object.wait.
+Conditions (also known as condition queues or condition variables) provide a means for one thread to suspend execution (to "wait") until notified by another thread that some state condition may not be true. Because access to this shared state information occurs in different threads, it must be protected, so a lock of some form is associated with the condition. The key property that waiting for a condition provides is that it atomically releases the associated lock and suspends the current thread, just like Object.wait.
 
 ```
 
@@ -74,7 +74,7 @@ Conditions (also known as condition queues or condition variables) provide a mea
 7. The differences between wait() and sleep()?
   1. wait() will release the lock or monitor, it should be placed in a synchonized blocks; and it will be waken by notify() or notifyAll() (in the same instance);
   2. sleep() doesn't deal with lock or monitor, it pauses the current execution;
-  3. wait() is used for inter-thread communications;
+  3. wait() is used for inter-thread communications, in other words, another thread has to notify it;
 8. what is race condition? how to avoid it?
   1. race condition happenes when multiple (threading) execution operate on the same object at the same time, without proper protection. A simple example is the counter example, using count++; Because ++ is not atomic, and no synchronzation, the result would not be stable nor correct. 
   2. It needs some protection to avoid it, sychronization ensures only one execution update it at the very same moment, volatile ensures the change is visible by others ASAP. also could use atomic variables, CAS methods;

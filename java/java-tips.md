@@ -1,6 +1,6 @@
 * 1\. LinkedHashMap
   * 1. LinkedHashMap，使用一个双向列表将Entries连接起来，提供可预期的迭代顺序；默认顺序是插入顺序；
-  * 2. 以下构造函数的accessOrder为true时，Entries将会按照accessOrder连接起来，从Least Recent Access到Most Recent Acess; 所以，用于实现LRU cache;
+  * 2. 以下构造函数的accessOrder为true时，Entries将会按照accessOrder连接起来，从Least Recent Access到Most Recent Acess; 可以，用于实现LRU cache;
 
   ```
   LinkedHashMap(int initialCapacity, float loadFactor, boolean accessOrder)
@@ -23,7 +23,7 @@
 
 * 3. ConcurrentHashMap
   * 1. 不允许null做为Key和Value
-    如下为containsKey的实现, 如果和containsKey实现一样， 判断是否能找到保存key的Node, 那么就需要加锁；使用判断value是否为空，可以不加锁；这个应该是value不能为空的原因；
+    如下为containsKey的实现, 如果和HashMap.containsKey实现一样， 判断是否能找到保存key的Node, 那么就需要加锁；使用判断value是否为空，可以不加锁；这个应该是value不能为空的原因；
 
     ```Java
     public boolean containsKey(Object key) {
