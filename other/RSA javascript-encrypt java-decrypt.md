@@ -7,7 +7,7 @@
   * a\. 生成rsa公钥和私钥
     
     ```
-openssl genrsa -out keypair.pem 2048
+    openssl genrsa -out keypair.pem 2048
     ```
 
     ```
@@ -26,35 +26,36 @@ openssl genrsa -out keypair.pem 2048
      ```
 
      * 2\. util methods
+    
      ```javascript
 
-    export function encrypt(plain) {
-  let crypt = new JSEncrypt();
+        export function encrypt(plain) {
+        let crypt = new JSEncrypt();
 
-  crypt.setPublicKey(
-    "-----BEGIN PUBLIC KEY-----\n88888888\n-----END PUBLIC KEY-----"
-  );
+        crypt.setPublicKey(
+          "-----BEGIN PUBLIC KEY-----\n88888888\n-----END PUBLIC KEY-----"
+        );
 
-  let res = crypt.encrypt(plain);
+        let res = crypt.encrypt(plain);
 
-  return "encrypted:" + res;
-}
+        return "encrypted:" + res;
+      }
 
      ```
 
    * c\. java 代码
    ```java
 
-public class RSACryptoUtil {
-    private static final Logger logger = LoggerFactory.getLogger(RSACryptoUtil.class);
-    private static final String PRIVATE_PEM = "rsa/pkcs8.key";
-    private static final String PREFIX = "encrypted:";
-    private static final String PRIVATE_KEY_BEGIN = "-----BEGIN PRIVATE KEY-----";
-    private static final String PRIVATE_KEY_END = "-----END PRIVATE KEY-----";
+    public class RSACryptoUtil {
+      private static final Logger logger = LoggerFactory.getLogger(RSACryptoUtil.class);
+      private static final String PRIVATE_PEM = "rsa/pkcs8.key";
+      private static final String PREFIX = "encrypted:";
+      private static final String PRIVATE_KEY_BEGIN = "-----BEGIN PRIVATE KEY-----";
+      private static final String PRIVATE_KEY_END = "-----END PRIVATE KEY-----";
 
-    private static volatile PrivateKey privateKey;
+      private static volatile PrivateKey privateKey;
 
-    private static PrivateKey getPrivateKey() throws Exception {
+      private static PrivateKey getPrivateKey() throws Exception {
         if (privateKey != null) {
             return privateKey;
         }
