@@ -1,0 +1,2 @@
+If you simply neglect to hold the lock while testing or changing the value of the condition, yourprogram will be subject to the fearsome lost wakeup problem. This condition occurs when one ofyour threads misses a wakeup signal because it had not yet gone to sleep. Of course, if you're notprotecting your shared data correctly, your program will be subject to numerous other bugs, so thisis nothing special. In Java it is not possible to suffer the lost wakeup problem just usingnotify()/wait() directly because you must hold the lock before you can call notify()
+
